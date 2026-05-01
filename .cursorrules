@@ -1,0 +1,99 @@
+# Qirlpl LIMS – Cursor Rules (Hinglish, Updated)
+
+Yeh project **Qirlpl LIMS** (Laboratory Information Management System) hai, ISO 17025 lab management ke liye. Neeche jo bhi rules hain, inhe follow karo jab bhi code likho ya change karo — especially Sample Handling flow ke aas-paas.
+-----
+
+## AI Behavior & Auto-Update Rules (IMPORTANT)
+- **Direct File Modification:** जब भी मैं कोई बदलाव या नया फीचर बनाने के लिए कहूँ, तो चैट में "Code Blocks" देने के बजाय सीधे संबंधित फाइल्स (Files) को **Update/Modify** करो।
+- **Agentic Action:** एक 'Developer Agent' की तरह काम करो। अगर किसी टास्क के लिए मल्टीपल फाइल्स बदलनी हैं, तो उन सभी को एक साथ "Apply" करो।
+- **Avoid Code Snippets:** चैट में कोड स्निपेट्स दिखाना कम करो और सीधे 'File Edit' टूल्स का इस्तेमाल करो ताकि मैं सिर्फ "Accept" पर क्लिक कर सकूँ।
+- **Proactive Search:** अगर आपको नहीं पता कि बदलाव कहाँ करना है, तो पहले कोडबेस में सर्च करो, फिर सीधे फाइल एडिट करो।
+
+
+---
+
+## Project Structure
+
+- **Root:** `Qirlpl_Lims` – poora repo yahi se start hota hai.
+- **web/** – Frontend app (React + Vite + TypeScript). Yahi main codebase hai.
+  - `web/src/` – Source code
+  - `web/src/features/` – Feature-wise modules (sample-handling, masters, settings, etc.)
+  - `web/src/components/` – Reusable UI components (shadcn/ui style)
+  - `web/src/lib/` – Shared libs (e.g. Supabase client)
+- **web/supabase/** – Supabase config: migrations, edge functions. SQL migrations yahi add karo.
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 19, TypeScript, Vite 7
+- **Styling:** Tailwind CSS, Radix UI components
+- **Backend / DB:** Supabase (PostgreSQL, Auth, Storage)
+- **Routing:** React Router v7
+
+Inke hisaab se code likho – naya dependency add karte waqt batao, taaki project style break na ho.
+
+---
+
+## Coding Conventions
+
+1. **TypeScript:** Hamesha types use karo. `any` avoid karo; zarurat ho to `unknown` ya proper union/interface banao.
+2. **Components:** Functional components + hooks. File name PascalCase (e.g. `SampleUnderTestingMasterPage.tsx`).
+3. **Features:** Har feature ke andar pattern:
+   - `*MasterPage`, `*HeaderBar`, `*Table`, `*Form`, `*FooterBar`.
+4. **State:**
+   - Local state → `useState`, `useReducer`.
+   - Shared / async data → `@tanstack/react-query` ya feature‑level hooks, jahan use ho raha ho.
+5. **Supabase:**
+   - Access hamesha `web/src/lib/supabaseClient` se.
+   - Queries: `.from('table_name').select(...)` style.
+   - Migrations: `web/supabase/migrations/` me versioned SQL files.
+6. **Paths:** Import me `@/` alias use karo (e.g. `@/components/ui/button`), jo `web/src` ko point karta hai.
+
+---
+
+## Module‑wise Behaviour Rules
+
+---
+
+## Naming & Language
+
+- **Code & variables:** English (e.g. `sampleId`, `allocationDate`, `testAllocationId`, `resultsReviewerId`).
+- **User-facing labels:** Mostly English; agar Hindi mix karna ho to clear aur professional rakho.
+- **Comments:** Hinglish allowed, but short and to‑the‑point.
+
+---
+
+## UI / UX
+
+- **Tables**:
+  - Grid-based layout, consistent column widths.
+  - Bulk actions (delete, move stage, etc.) pe checkbox selection support rakho.
+- **Forms**:
+  - Dialogs use karo (existing shadcn patterns follow karo).
+  - Required fields validate karo; save pe **loading state + error/success message** dikhana zaroori hai.
+- **Accessibility**:
+  - Buttons ke liye `aria-label` zaroor do jab icon‑only ho.
+  - Inputs ke saath `Label` component use karo.
+
+---
+
+## Git & Env
+
+- `.env` / `.env.local` kabhi commit mat karo – Supabase URL/keys yahi rahenge.
+- Har schema change ke liye:
+  - `web/supabase/migrations/` me ek naya SQL file banao (date prefix ke sath).
+  - Breaking changes clearly comment karo (especially Sample Handling tables pe).
+
+---
+
+## Summary
+
+- React + TypeScript + Supabase + Tailwind follow karo.
+- Feature structure hamesha `features/<module>/` jaisa rakho.
+- Types shared `types.ts` me rakho; circular imports avoid karo.
+- Sample Handling ke liye:
+  - Stage transitions sirf `samples.stage` drive kare.
+  - Per‑parameter dates/results/reviewer **sirf** `test_allocation_parameters` me rakho.
+  - Reviewer‑based filtering hamesha `results_reviewer_id` (per parameter) pe depend kare, na ki sample level pe.
+
