@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "supabase-qirlpl-lims": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=tzbgywlwfcdsgrumstpu"
+    }
+  }
+}
